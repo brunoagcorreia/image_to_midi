@@ -16,18 +16,19 @@ def calculate_duration(val):
     return duration
 
 
-def create_midi_file(channel, volume, time, track, bpm, duration, scale):
+def create_midi_file(channel, volume, time, track, bpm, duration, scale, length):
     mf = MIDIFile(1)
     pitches_list = []
 
     mf.addTrackName(track, time, "Test1")
     mf.addTempo(track, time, bpm)
 
-    for i in range(1580):
-        pitch = return_closest_pitch(allowed_pitches(scale), int(single_file(filename_hr)[i]) / 3)
-        mf.addNote(track, channel, pitch, time, duration, volume)
-        time += duration
-        pitches_list.append(pitch)
+    for i in range(length):
+        if i <= length:
+            pitch = return_closest_pitch(allowed_pitches(scale), int(single_file(filename_hr)[i]) / 3)
+            mf.addNote(track, channel, pitch, time, duration, volume)
+            time += duration
+            pitches_list.append(pitch)
 
     with open("output/output.mid", "wb") as outf:
         mf.writeFile(outf)
