@@ -29,7 +29,7 @@ def create_midi_file(channel, volume, time, track, bpm, duration, scale):
         time += duration
         pitches_list.append(pitch)
 
-    with open("output.mid", "wb") as outf:
+    with open("output/output.mid", "wb") as outf:
         mf.writeFile(outf)
 
     print("Done!")
