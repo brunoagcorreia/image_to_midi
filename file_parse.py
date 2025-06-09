@@ -2,7 +2,7 @@ import os
 from PIL import Image
 
 path = "img"
-filename_hr = "marina_stojakovic.jpeg" # File must be colored JPEG image
+filename_hr = "demo_image.jpg" # File must be colored JPEG image
 
 
 def reduce_resolution(img):
