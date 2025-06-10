@@ -15,6 +15,9 @@ def calculate_duration(val):
         duration = 1
     return duration
 
+def map_intensity_to_pitch(allowed, intensity):
+    index = int((intensity / 255) * (len(allowed) - 1))
+    return allowed[index]
 
 def create_midi_file(channel, volume, time, track, bpm, duration, scale, length):
     mf = MIDIFile(1)
@@ -25,13 +28,26 @@ def create_midi_file(channel, volume, time, track, bpm, duration, scale, length)
 
     # Assuming single_file(filename_hr) returns a list of RGB tuples - color photo
     pixel_data = single_file(filename_hr)
+    
+    #sets regular intervals for pixels from image according to lenght
+    interval = len(pixel_data)/length
+    
+    # array containing all selected pixels from image
+    pixel_param = []
 
     for i in range(length):
-        if i < len(pixel_data):  # safer than i <= length
-            r, g, b = pixel_data[i]
-            intensity = (r + g + b) / 3  # convert RGB to single value
+        # populate array of selected pixels from image
+        pixel_param.append(pixel_data[i * int(interval)])
 
-            pitch = return_closest_pitch(allowed_pitches(scale), intensity / 3)  # adjust to your scale
+    allowed = allowed_pitches(scale)
+
+    for i in range(length):
+        if i < len(pixel_param):
+            r, g, b = pixel_param[i]
+            intensity = (r + g + b) / 3  # range: 0–255
+
+            pitch = map_intensity_to_pitch(allowed, intensity)
+
             mf.addNote(track, channel, pitch, time, duration, volume)
             time += duration
             pitches_list.append(pitch)
@@ -39,5 +55,5 @@ def create_midi_file(channel, volume, time, track, bpm, duration, scale, length)
     with open("output/" + filename_hr + ".mid", "wb") as outf:
         mf.writeFile(outf)
 
-    print("Done!")
     print(pitches_list)
+    print("Done!")
